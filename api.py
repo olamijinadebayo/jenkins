@@ -17,3 +17,26 @@ def initializeDb():
     session = sessionmaker(bind=engine)()
     Base.metadata.create_all(engine)
     return session
+
+def addJob(session, jlist):
+    for j in jlist:
+        session.add(j)
+    session.commit()
+
+def getLastJobId(session, name):
+    job = session.query(Jobs).filter_by(name=name).order_by(Jobs.jen_id.desc()).first()
+    if (job != None):
+        return job.jen_id
+    else:
+        return None
+
+class Jobs(Base):
+    __tablename__ = 'Jobs'
+
+    id = Column(Integer, primary_key = True)
+    jen_id = Column(Integer)
+    name = Column(String)
+    timeStamp = Column(DateTime)
+    result = Column(String)
+    building = Column(String)
+    estimatedDuration = Column(String)
